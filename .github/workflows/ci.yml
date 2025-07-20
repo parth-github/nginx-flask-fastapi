@@ -30,11 +30,16 @@ jobs:
         pip install -r requirements.txt
       working-directory: .
 
+    - name: Set PYTHONPATH
+      run: echo "PYTHONPATH=$PYTHONPATH:." >> $GITHUB_ENV
+      # working-directory: ./flask_app
+
     - name: Run Flask unit tests
+      # env:
+      #   PYTHONPATH: ${{ github.workspace }}/flask_app
       run: pytest --cov=app --cov-report=term --cov-report=xml tests/
       working-directory: ./flask_app
-      env:
-        PYTHONPATH: app
+
         
 
     # - name: Install dependencies for FastAPI app
