@@ -14,7 +14,24 @@ services:
   flask:
     build: ./flask_app
     container_name: flask_service
-
+    ports:
+      - "5000:5000"
+    # command: pytest tests/
   fastapi:
     build: ./fastapi_app
     container_name: fastapi_service
+    ports:
+      - "8000:8000"
+    # command: pytest tests/
+  # flask_test:
+  #   build: ./flask_app
+  #   container_name: flask_test_service
+  #   command: pytest --cov=app --cov-report=term --cov-report=xml tests/
+  #   volumes:
+  #     - ./flask_app:/app
+  # fastapi_test:
+  #   build: ./fastapi_app
+  #   container_name: fastapi_test_service
+  #   command: pytest --cov=main --cov-report=term --cov-report=xml tests/
+  #   volumes:
+  #     - ./fastapi_app:/app
