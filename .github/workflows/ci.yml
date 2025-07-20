@@ -34,7 +34,8 @@ jobs:
       run: pytest --cov=app --cov-report=term --cov-report=xml tests/
       working-directory: ./flask_app
       env:
-        PYTHONPATH: /app
+        PYTHONPATH: app
+        
 
     # - name: Install dependencies for FastAPI app
     #   run: |
@@ -46,4 +47,4 @@ jobs:
       run: pytest --cov=main --cov-report=term --cov-report=xml tests/
       working-directory: ./fastapi_app
       env:
-        PYTHONPATH: /main
+        PYTHONPATH: main
