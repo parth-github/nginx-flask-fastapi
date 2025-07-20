@@ -1,0 +1,57 @@
+#create integration tests for nginx, flask, and fastapi and deploy them using GitHub Actions into local Docker containers
+name: CD - Flask and FastAPI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  deploy:
+    name: Deploy to Docker
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: |
+          flask_service:latest
+          fastapi_service:latest
+          nginx_service:latest
+
+    - name: Deploy with Docker Compose
+      run: |
+        docker-compose -f docker-compose.yml up -d --build
+      env:
+        DOCKER_BUILDKIT: 1
+        COMPOSE_DOCKER_CLI_BUILD: 1
+        DOCKER_HOST: unix:///var/run/docker.sock
+        DOCKER_TLS_CERTDIR: ""
+        DOCKER_COMPOSE_VERSION: 1.29.2
+        DOCKER_COMPOSE_FILE: docker-compose.yml
+        DOCKER_COMPOSE_PROJECT_NAME: nginx_flask_fastapi
+        DOCKER_COMPOSE_HTTP_TIMEOUT: 300
+        DOCKER_COMPOSE_FORCE_RECREATE: true
+        DOCKER_COMPOSE_NO_RECREATE: false
+      
+# Optional: Add a step to verify the deployment
+    - name: Verify Deployment
+      run: |
+        curl -f http://localhost:8080/flask/hello || exit 1
+        curl -f http://localhost:8080/fastapi/hello || exit 1
+      continue-on-error: true
+
+    - name: Cleanup
+      run: docker-compose -f docker-compose.yml down
+      if: always() # Ensure cleanup runs even if previous steps fail
+        

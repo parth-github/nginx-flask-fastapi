@@ -32,7 +32,6 @@ jobs:
 
     - name: Set PYTHONPATH
       run: echo "PYTHONPATH=$PYTHONPATH:." >> $GITHUB_ENV
-      # working-directory: ./flask_app
 
     - name: Run Flask unit tests
       # env:
@@ -40,16 +39,6 @@ jobs:
       run: pytest --cov=app --cov-report=term --cov-report=xml tests/
       working-directory: ./flask_app
 
-        
-
-    # - name: Install dependencies for FastAPI app
-    #   run: |
-    #     python -m pip install --upgrade pip
-    #     pip install fastapi uvicorn pytest
-    #   working-directory: ./fastapi_app
-
     - name: Run FastAPI unit tests
       run: pytest --cov=main --cov-report=term --cov-report=xml tests/
       working-directory: ./fastapi_app
-      env:
-        PYTHONPATH: main
