@@ -24,11 +24,11 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install dependencies for Flask app
+    - name: Install dependencies for Flask and FastAPI app
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-      working-directory: /
+      working-directory: .
 
     - name: Run Flask unit tests
       run: pytest --cov=app --cov-report=term --cov-report=xml tests/
